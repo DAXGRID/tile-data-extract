@@ -8,7 +8,7 @@ namespace TileDataExtract.Tests;
 
 public class PostgisTestFixture : IAsyncLifetime
 {
-    public const string ConnectionString = "Host=localhost;Port=25432;Username=docker;Password=docker;Database=postgres";
+    public const string ConnectionString = "Host=localhost;Port=5432;Username=docker;Password=docker;Database=postgres";
 
     public async Task InitializeAsync()
     {
