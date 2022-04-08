@@ -25,7 +25,6 @@ internal static class Program
         {
             throw new ArgumentNullException(nameof(startup));
         }
-
     }
 
     private static ServiceProvider BuildServiceProvider()
