@@ -16,7 +16,16 @@ internal static class Program
 
         using var serviceProvider = BuildServiceProvider();
         var startup = serviceProvider.GetService<Startup>();
-        await startup.Start().ConfigureAwait(false);
+
+        if (startup is not null)
+        {
+            await startup.Start().ConfigureAwait(false);
+        }
+        else
+        {
+            throw new ArgumentNullException(nameof(startup));
+        }
+
     }
 
     private static ServiceProvider BuildServiceProvider()

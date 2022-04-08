@@ -4,8 +4,8 @@ namespace TileDataExtract;
 
 internal class PostgresReader
 {
-    public static async IAsyncEnumerable<string> ReadTableColumnsAsync(
-        string connectionString, string query)
+    public static async IAsyncEnumerable<Dictionary<string, object?>>
+        ReadTableColumnsAsync(string connectionString, string query)
     {
         using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync().ConfigureAwait(false);
@@ -15,22 +15,17 @@ internal class PostgresReader
 
         while (await reader.ReadAsync().ConfigureAwait(false))
         {
-            var column = new Dictionary<string, object>();
-
+            var column = new Dictionary<string, object?>();
             for (var i = 0; i < reader.FieldCount; i++)
             {
                 if (!reader.GetDataTypeName(i)
                     .Contains("geometry", StringComparison.OrdinalIgnoreCase))
                 {
-                    column.Add(reader.GetName(i), reader.GetValue(i));
-                }
-                else
-                {
-                    // Do nothing right now
+                    column.Add(reader.GetName(i), reader.IsDBNull(i) ? null : reader.GetValue(i));
                 }
             }
 
-            yield return reader.GetGuid(0).ToString();
+            yield return column;
         }
     }
 }
