@@ -54,7 +54,7 @@ public class GeoJsonFactoryTests
         var selections = new List<Selection>
         {
             new Selection(
-                "route_node",
+                "Feature",
                 "coord",
                 sql,
                 17,

@@ -9,7 +9,7 @@ internal record Selection
     public string SqlQuery { get; init; }
     public int DefaultMinZoom { get; init; }
     public int DefaultMaxZoom { get; init; }
-    public List<CustomZoom>? CustomZooms { get; init; }
+    public List<CustomZoom> CustomZooms { get; init; }
 
     public Selection(
         string objectType,
@@ -19,12 +19,12 @@ internal record Selection
         int defaultMaxZoom,
         List<CustomZoom>? customZooms)
     {
-        ObjectType = objectType;
+        this.ObjectType = objectType;
         GeometryFieldName = geometryFieldName;
         SqlQuery = sqlQuery;
         DefaultMinZoom = defaultMinZoom;
         DefaultMaxZoom = defaultMaxZoom;
-        CustomZooms = customZooms;
+        CustomZooms = customZooms ?? new();
     }
 }
 
