@@ -1,30 +1,34 @@
 namespace TileDataExtract;
 
-internal record CustomZoom(string FieldName, List<string> FieldValue, int MinZoom, int MaxZoom);
+internal record Zoom(int MinZoom, int MaxZoom);
+
+internal record CustomZoom(
+    string FieldName,
+    Dictionary<string, Zoom> ZoomMap);
 
 internal record Selection
 {
     public string ObjectType { get; init; }
     public string GeometryFieldName { get; init; }
     public string SqlQuery { get; init; }
-    public int DefaultMinZoom { get; init; }
-    public int DefaultMaxZoom { get; init; }
-    public List<CustomZoom> CustomZooms { get; init; }
+    public Zoom DefaultZoom { get; init; }
+    public CustomZoom? CustomZoom { get; init; }
+    public Dictionary<string, object> ExtraProperties { get; init; }
 
     public Selection(
         string objectType,
         string geometryFieldName,
         string sqlQuery,
-        int defaultMinZoom,
-        int defaultMaxZoom,
-        List<CustomZoom>? customZooms)
+        Zoom defaultZoom,
+        CustomZoom? customZoom,
+        Dictionary<string, object>? extraProperties)
     {
-        this.ObjectType = objectType;
+        ObjectType = objectType;
         GeometryFieldName = geometryFieldName;
         SqlQuery = sqlQuery;
-        DefaultMinZoom = defaultMinZoom;
-        DefaultMaxZoom = defaultMaxZoom;
-        CustomZooms = customZooms ?? new();
+        DefaultZoom = defaultZoom;
+        CustomZoom = customZoom;
+        ExtraProperties = extraProperties ?? new();
     }
 }
 

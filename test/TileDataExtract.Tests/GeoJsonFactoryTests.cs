@@ -13,18 +13,29 @@ public class GeoJsonFactoryTests
         var settings = CreateSettings();
         var tippecanoe = new Tippecanoe(17, 17);
         var geometry = new Geometry("Point", new double[] { 9.840274737, 55.848383545 });
-        var properties = new Dictionary<string, object>
+        var properties = new Dictionary<string, object?>
         {
+            { "mrid", "06e660e2-8a6b-4f1b-bc7f-85f1aea8ca5f" },
             { "objecttype", "route_node" },
-            { "mrid", "0415770b-27e6-421c-b6bb-7a40dc2165f6" }
+            { "routenode_kind", null },
+            { "routenode_function", null },
+            { "naming_name", null },
+            { "mapping_method", null },
+            { "lifecycle_deployment_state", null }
         };
 
         var expected = new GeoJsonStructure("Feature", 1, geometry, properties, tippecanoe);
         var selection = settings.Selections.First();
 
-        var column = new Dictionary<string, object>
+        var column = new Dictionary<string, object?>
         {
-            { "mrid", "0415770b-27e6-421c-b6bb-7a40dc2165f6" },
+            { "mrid", "06e660e2-8a6b-4f1b-bc7f-85f1aea8ca5f" },
+            { "coord", "{\"type\":\"Point\",\"coordinates\":[9.840274737,55.848383545]}" },
+            { "routenode_kind", null },
+            { "routenode_function", null },
+            { "naming_name", null },
+            { "mapping_method", null },
+            { "lifecycle_deployment_state", null }
         };
 
         var result = GeoJsonFactory.Create(selection, column);
@@ -57,25 +68,18 @@ public class GeoJsonFactoryTests
                 "Feature",
                 "coord",
                 sql,
-                17,
-                17,
-                new List<CustomZoom>
-                {
-                    new CustomZoom(
-                        "routenode_kind",
-                        new List<string>
-                        {
-                            "CentralOfficeBig",
-                            "CentralOfficeMedium",
-                            "CentralOfficeSmall"
-                        },
-                        5,
-                        22),
-                    new CustomZoom(
-                        "routenode_kind",
-                        new List<string> {"CabinetBig"},
-                        12,
-                        22),
+                new (17, 17),
+                new CustomZoom(
+                    "routenode_kind",
+                    new Dictionary<string, Zoom>
+                    {
+                        {"CentralOfficeBig", new (5, 22)},
+                        {"CentralOfficeMedium", new (5, 22)},
+                        {"CentralOfficeSmall", new (5, 22)},
+                        {"CabinetBig", new (12, 22)}
+                    }),
+                new() {
+                    {"objecttype", "route_node"}
                 }
             )
         };

@@ -1,39 +1,84 @@
-using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace TileDataExtract;
 
 internal record Tippecanoe(int Minzoom, int Maxzoom);
 
-internal record Geometry(string Type, double[] Coordinates);
+internal record Geometry
+{
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+    [JsonPropertyName("coordinates")]
+    public double[] Coordinates { get; init; }
+
+    [JsonConstructor]
+    public Geometry(string type, double[] coordinates)
+    {
+        Type = type;
+        Coordinates = coordinates;
+    }
+}
 
 internal record GeoJsonStructure(
     string Type,
     int Id,
     Geometry Geometry,
-    Dictionary<string, object> Properties,
+    Dictionary<string, object?> Properties,
     Tippecanoe Tippecanoe);
 
 internal static class GeoJsonFactory
 {
     public static GeoJsonStructure Create(
         Selection selection,
-        Dictionary<string, object> column)
-    {
-        var geometry = JsonSerializer
-            .Deserialize<Geometry>((string)column[selection.GeometryFieldName]);
-
-        var properties = column.Where(x => x.Key != selection.GeometryFieldName)
-            .ToDictionary(x => x.Key, x => x.Value);
-
-        var zoom = selection.CustomZooms
-
-        return new GeoJsonStructure(
+        Dictionary<string, object?> column) =>
+        new GeoJsonStructure(
             selection.ObjectType,
             1,
-            geometry,
-            properties,
-            new()
-        );
+            CreateGeometry(selection, column),
+            CreateProperties(selection, column),
+            CreateTippecanoe(selection, column));
+
+    private static Tippecanoe CreateTippecanoe(
+        Selection selection, Dictionary<string, object?> column)
+    {
+        Tippecanoe tippecanoe;
+        if (selection.CustomZoom is null)
+        {
+            tippecanoe = new(selection.DefaultZoom.MinZoom, selection.DefaultZoom.MaxZoom);
+        }
+        else
+        {
+            var customZoomFieldValue = (string?)column[selection.CustomZoom.FieldName];
+            Zoom? zoom;
+            if (customZoomFieldValue is not null &&
+                selection.CustomZoom.ZoomMap.TryGetValue(customZoomFieldValue, out zoom))
+            {
+                tippecanoe = new(zoom.MinZoom, zoom.MaxZoom);
+            }
+            else
+            {
+                tippecanoe = new(selection.DefaultZoom.MinZoom, selection.DefaultZoom.MaxZoom);
+            }
+        }
+
+        return tippecanoe;
+    }
+
+    private static Dictionary<string, object?> CreateProperties(
+        Selection selection, Dictionary<string, object?> column)
+    {
+        return column.Where(x => x.Key != selection.GeometryFieldName)
+            .Concat(selection.ExtraProperties as Dictionary<string, object?>)
+            .ToDictionary(x => x.Key, x => x.Value);
+    }
+
+    private static Geometry CreateGeometry(
+        Selection selection, Dictionary<string, object?> column)
+    {
+        var geometry = (string?)column[selection.GeometryFieldName] ?? "";
+        return JsonSerializer.Deserialize<Geometry>(geometry) ??
+           throw new ArgumentException(
+               $"Could not deserialize geometry with value: {geometry}.", nameof(geometry));
     }
 }
