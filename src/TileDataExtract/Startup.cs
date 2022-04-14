@@ -11,7 +11,6 @@ internal class Startup
     {
         _logger = logger;
         _settings = settings;
-        Console.WriteLine("HERE:!" + settings.ConnectionString);
     }
 
     public async Task StartAsync()
