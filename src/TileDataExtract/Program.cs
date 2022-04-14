@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
+using System.Text.Json;
 
 namespace TileDataExtract;
 
@@ -10,21 +11,17 @@ internal static class Program
 {
     internal static async Task Main()
     {
-        var root = Directory.GetCurrentDirectory();
-        var dotenv = Path.Combine(root, ".env");
-        DotEnv.Load(dotenv);
-
         using var serviceProvider = BuildServiceProvider();
         var startup = serviceProvider.GetService<Startup>();
-        await startup.Start().ConfigureAwait(false);
+
+        if (startup is not null)
+            await startup.StartAsync().ConfigureAwait(false);
+        else
+            throw new ArgumentNullException(nameof(startup));
     }
 
     private static ServiceProvider BuildServiceProvider()
     {
-        var config = new ConfigurationBuilder()
-            .AddEnvironmentVariables()
-            .Build();
-
         var logger = new LoggerConfiguration()
             .MinimumLevel.Information()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -33,8 +30,14 @@ internal static class Program
             .WriteTo.Console(new CompactJsonFormatter())
             .CreateLogger();
 
+        var settingsJson = JsonDocument.Parse(File.ReadAllText("appsettings.json"))
+            .RootElement.GetProperty("settings").ToString();
+
+        var settings = JsonSerializer.Deserialize<Settings>(settingsJson) ??
+            throw new ArgumentException("Could not deserialize appsettings into settings.");
+
         return new ServiceCollection()
-            .AddSingleton<IConfiguration>(config)
+            .AddSingleton<Settings>(settings)
             .AddLogging(logging =>
             {
                 logging.AddSerilog(logger, true);

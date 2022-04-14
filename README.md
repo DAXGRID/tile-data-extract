@@ -3,7 +3,17 @@
 
 ## Testing
 
+Run the whole test suite.
 
+```sh
+dotnet test
+```
+
+### Unit testing
+
+```sh
+dotnet test --filter Category=Unit
+```
 
 ### Integration testing
 

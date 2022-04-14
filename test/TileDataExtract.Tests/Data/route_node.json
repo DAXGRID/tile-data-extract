@@ -1,0 +1,92 @@
+[
+  {
+    "mrid": "06e660e2-8a6b-4f1b-bc7f-85f1aea8ca5f",
+    "coord": "{\"type\":\"Point\",\"coordinates\":[9.839188206,55.84779807]}",
+    "routenode_kind": null,
+    "routenode_function": null,
+    "naming_name": null,
+    "mapping_method": null,
+    "lifecycle_deployment_state": null
+  },
+  {
+    "mrid": "4adfcc8a-c613-4885-9510-0b8aa1518c51",
+    "coord": "{\"type\":\"Point\",\"coordinates\":[9.840274737,55.848383545]}",
+    "routenode_kind": null,
+    "routenode_function": null,
+    "naming_name": null,
+    "mapping_method": null,
+    "lifecycle_deployment_state": null
+  },
+  {
+    "mrid": "06b9549f-6437-43e6-a34b-22372567f64e",
+    "coord": "{\"type\":\"Point\",\"coordinates\":[9.83974273,55.848096878]}",
+    "routenode_kind": null,
+    "routenode_function": null,
+    "naming_name": null,
+    "mapping_method": null,
+    "lifecycle_deployment_state": null
+  },
+  {
+    "mrid": "c128d796-861d-433f-bc37-de93de0d22e3",
+    "coord": "{\"type\":\"Point\",\"coordinates\":[9.83884148,55.848630028]}",
+    "routenode_kind": null,
+    "routenode_function": null,
+    "naming_name": null,
+    "mapping_method": null,
+    "lifecycle_deployment_state": null
+  },
+  {
+    "mrid": "7293d541-eb38-4a25-9910-016ea13cb4ec",
+    "coord": "{\"type\":\"Point\",\"coordinates\":[9.839483708,55.847957303]}",
+    "routenode_kind": null,
+    "routenode_function": null,
+    "naming_name": null,
+    "mapping_method": null,
+    "lifecycle_deployment_state": null
+  },
+  {
+    "mrid": "fa0759cb-f42a-41cb-b9e9-e97d84402089",
+    "coord": "{\"type\":\"Point\",\"coordinates\":[9.84019654,55.847637896]}",
+    "routenode_kind": null,
+    "routenode_function": null,
+    "naming_name": null,
+    "mapping_method": null,
+    "lifecycle_deployment_state": null
+  },
+  {
+    "mrid": "50279e46-b8fb-4538-b830-8ebce4546f66",
+    "coord": "{\"type\":\"Point\",\"coordinates\":[9.839767987,55.847829924]}",
+    "routenode_kind": null,
+    "routenode_function": null,
+    "naming_name": null,
+    "mapping_method": null,
+    "lifecycle_deployment_state": null
+  },
+  {
+    "mrid": "0415770b-27e6-421c-b6bb-7a40dc2165f6",
+    "coord": "{\"type\":\"Point\",\"coordinates\":[9.839215559,55.847486786]}",
+    "routenode_kind": null,
+    "routenode_function": null,
+    "naming_name": null,
+    "mapping_method": null,
+    "lifecycle_deployment_state": null
+  },
+  {
+    "mrid": "619d64a1-35fc-439f-adc9-2df6c0312d39",
+    "coord": "{\"type\":\"Point\",\"coordinates\":[9.838047543,55.847686317]}",
+    "routenode_kind": "CentralOfficeSmall",
+    "routenode_function": null,
+    "naming_name": null,
+    "mapping_method": null,
+    "lifecycle_deployment_state": null
+  },
+  {
+    "mrid": "6923e700-3c40-4e07-aad0-ab0dc122d97a",
+    "coord": "{\"type\":\"Point\",\"coordinates\":[9.838059164,55.848226403]}",
+    "routenode_kind": "CentralOfficeBig",
+    "routenode_function": null,
+    "naming_name": null,
+    "mapping_method": null,
+    "lifecycle_deployment_state": null
+  }
+]

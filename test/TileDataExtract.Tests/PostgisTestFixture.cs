@@ -12,22 +12,28 @@ public class PostgisTestFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
+        await CleanupDB();
         await SetupDB();
     }
 
     public async Task DisposeAsync()
     {
-        var sql = "DROP SCHEMA route_network CASCADE";
-        using var conn = new NpgsqlConnection(ConnectionString);
-        using var cmd = new NpgsqlCommand(sql, conn);
-        await conn.OpenAsync();
-        await cmd.ExecuteNonQueryAsync();
+        await Task.CompletedTask;
     }
 
     private async Task SetupDB()
     {
         using var conn = new NpgsqlConnection(ConnectionString);
         var sql = File.ReadAllText(GetFilePath("Scripts/setup_db.sql"));
+        using var cmd = new NpgsqlCommand(sql, conn);
+        await conn.OpenAsync();
+        await cmd.ExecuteNonQueryAsync();
+    }
+
+    private async Task CleanupDB()
+    {
+        var sql = "DROP SCHEMA IF EXISTS route_network CASCADE";
+        using var conn = new NpgsqlConnection(ConnectionString);
         using var cmd = new NpgsqlCommand(sql, conn);
         await conn.OpenAsync();
         await cmd.ExecuteNonQueryAsync();
