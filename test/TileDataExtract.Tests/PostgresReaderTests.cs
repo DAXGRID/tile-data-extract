@@ -1,4 +1,5 @@
 using FluentAssertions;
+using FluentAssertions.Json;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Text.Json;
@@ -13,8 +14,10 @@ public class PostgresReaderTests
 {
     [Theory]
     [JsonFileData("Data/route_node.json")]
-    public async Task Read_table(string expected)
+    public async Task Read_table(string expectedJson)
     {
+        var expected = JToken.Parse(expectedJson);
+
         var sql =
               @"select
                   mrid,
@@ -33,8 +36,6 @@ public class PostgresReaderTests
         var columns = await PostgresReader.ReadTableColumnsAsync(
                          PostgisTestFixture.ConnectionString, sql).ToListAsync();
 
-        JToken.Parse(JsonSerializer.Serialize(columns))
-            .Should()
-            .BeEquivalentTo(JToken.Parse(expected));
+        JToken.Parse(JsonSerializer.Serialize(columns)).Should().BeEquivalentTo(expected);
     }
 }

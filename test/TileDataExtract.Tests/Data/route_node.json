@@ -74,7 +74,7 @@
   {
     "mrid": "619d64a1-35fc-439f-adc9-2df6c0312d39",
     "coord": "{\"type\":\"Point\",\"coordinates\":[9.838047543,55.847686317]}",
-    "routenode_kind": null,
+    "routenode_kind": "CentralOfficeSmall",
     "routenode_function": null,
     "naming_name": null,
     "mapping_method": null,
@@ -83,7 +83,7 @@
   {
     "mrid": "6923e700-3c40-4e07-aad0-ab0dc122d97a",
     "coord": "{\"type\":\"Point\",\"coordinates\":[9.838059164,55.848226403]}",
-    "routenode_kind": null,
+    "routenode_kind": "CentralOfficeBig",
     "routenode_function": null,
     "naming_name": null,
     "mapping_method": null,

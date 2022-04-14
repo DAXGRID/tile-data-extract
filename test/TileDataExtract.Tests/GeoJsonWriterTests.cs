@@ -12,13 +12,17 @@ namespace TileDataExtract;
 [Collection("Postgis collection")]
 public class GeoJsonWriterTests
 {
-    [Fact]
-    public async Task Read_from_postgres_and_write_geojson_to_disk()
+    [Theory]
+    [JsonFileData("Data/route_network.geojson")]
+    public async Task Read_from_postgres_and_write_geojson_to_disk(string expected)
     {
         var settings = CreateSettings();
         var outputPath = $"{Path.GetTempPath()}/{Guid.NewGuid().ToString()}.geojson";
         await GeoJsonWriter.WriteAsync(settings.Selections, settings.ConnectionString, outputPath);
-        true.Should().Be(true);
+
+        var result = await File.ReadAllTextAsync(outputPath);
+
+        result.Should().Be(expected);
     }
 
     private static Settings CreateSettings()

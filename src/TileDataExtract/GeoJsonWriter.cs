@@ -5,6 +5,9 @@ namespace TileDataExtract;
 
 internal static class GeoJsonWriter
 {
+    private readonly static JsonSerializerOptions _jsonSerializerOptions =
+        new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
     public static async Task WriteAsync(
         List<Selection> selections, string connectionString, string outputPath)
     {
@@ -25,5 +28,5 @@ internal static class GeoJsonWriter
     }
 
     private static string JsonNewline<T>(T x)
-        => $"{JsonSerializer.Serialize(x)}\n";
+        => $"{JsonSerializer.Serialize(x, _jsonSerializerOptions)}\n";
 }
