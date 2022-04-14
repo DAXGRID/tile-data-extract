@@ -17,10 +17,10 @@ public class GeoJsonWriterTests
     public async Task Read_from_postgres_and_write_geojson_to_disk(string expected)
     {
         var settings = CreateSettings();
-        var outputPath = $"{Path.GetTempPath()}/{Guid.NewGuid().ToString()}.geojson";
-        await GeoJsonWriter.WriteAsync(settings.Selections, settings.ConnectionString, outputPath);
+        await GeoJsonWriter.WriteAsync(
+            settings.Selections, settings.ConnectionString, settings.OutputFilePath);
 
-        var result = await File.ReadAllTextAsync(outputPath);
+        var result = await File.ReadAllTextAsync(settings.OutputFilePath);
 
         result.Should().Be(expected);
     }
@@ -87,6 +87,9 @@ public class GeoJsonWriterTests
             selectionRouteSegments
         };
 
-        return new Settings(PostgisTestFixture.ConnectionString, selections);
+        return new Settings(
+            $"{Path.GetTempPath()}/{Guid.NewGuid().ToString()}.geojson",
+            PostgisTestFixture.ConnectionString,
+            selections);
     }
 }

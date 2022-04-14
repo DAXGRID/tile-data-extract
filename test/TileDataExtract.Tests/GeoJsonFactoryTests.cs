@@ -65,7 +65,7 @@ public class GeoJsonFactoryTests
                   coord is not null and
                   marked_to_be_deleted = false";
 
-        var connString = "Host=localhost;Port=5432;Username=docker;Password=docker;Database=postgres";
+        var connstring = "Host=localhost;Port=5432;Username=docker;Password=docker;Database=postgres";
 
         var selections = new List<Selection>
         {
@@ -90,6 +90,6 @@ public class GeoJsonFactoryTests
             )
         };
 
-        return new Settings(connString, selections);
+        return new Settings("my-output.geojson", connstring, selections);
     }
 }

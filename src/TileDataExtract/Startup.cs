@@ -17,9 +17,12 @@ internal class Startup
     public async Task StartAsync()
     {
         _logger.LogInformation($"Starting {nameof(TileDataExtract)}.");
-        // TODO change to use output path
-        await GeoJsonWriter.WriteAsync(_settings.Selections, _settings.ConnectionString, "")
-            .ConfigureAwait(false);
-        _logger.LogInformation($"Finished writing to.");
+
+        await GeoJsonWriter.WriteAsync(
+            _settings.Selections,
+            _settings.ConnectionString,
+            _settings.OutputFilePath).ConfigureAwait(false);
+
+        _logger.LogInformation($"Finished writing to {_settings.OutputFilePath}");
     }
 }

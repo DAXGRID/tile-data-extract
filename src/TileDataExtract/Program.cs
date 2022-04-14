@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
-using System.Text.Json;
 
 namespace TileDataExtract;
 

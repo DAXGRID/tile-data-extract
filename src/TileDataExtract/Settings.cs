@@ -32,4 +32,4 @@ internal record Selection
     }
 }
 
-internal record Settings(string ConnectionString, List<Selection> Selections);
+internal record Settings(string OutputFilePath, string ConnectionString, List<Selection> Selections);
