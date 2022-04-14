@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace TileDataExtract;
 
@@ -8,10 +7,11 @@ internal class Startup
     private readonly ILogger<Startup> _logger;
     private readonly Settings _settings;
 
-    public Startup(ILogger<Startup> logger, IOptions<Settings> settings)
+    public Startup(ILogger<Startup> logger, Settings settings)
     {
         _logger = logger;
-        _settings = settings.Value;
+        _settings = settings;
+        Console.WriteLine("HERE:!" + settings.ConnectionString);
     }
 
     public async Task StartAsync()

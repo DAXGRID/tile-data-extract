@@ -17,6 +17,7 @@ public class GeoJsonWriterTests
     public async Task Read_from_postgres_and_write_geojson_to_disk(string expected)
     {
         var settings = CreateSettings();
+
         await GeoJsonWriter.WriteAsync(
             settings.Selections, settings.ConnectionString, settings.OutputFilePath);
 
@@ -88,7 +89,7 @@ public class GeoJsonWriterTests
         };
 
         return new Settings(
-            $"{Path.GetTempPath()}/{Guid.NewGuid().ToString()}.geojson",
+            $"{Path.GetTempPath()}{Guid.NewGuid().ToString()}.geojson",
             PostgisTestFixture.ConnectionString,
             selections);
     }
