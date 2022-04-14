@@ -11,10 +11,6 @@ internal static class GeoJsonWriter
     public static async Task WriteAsync(
         List<Selection> selections, string connectionString, string outputPath)
     {
-        // We remove the existing file since we append.
-        // if (File.Exists(outputPath))
-        //     File.Delete(outputPath);
-
         var id = 0;
         using StreamWriter writer = new(outputPath);
         foreach (var selection in selections)
