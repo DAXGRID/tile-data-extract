@@ -1,6 +1,7 @@
 using FluentAssertions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Xunit;
 
 namespace TileDataExtract.Tests;
@@ -13,7 +14,10 @@ public class GeoJsonFactoryTests
         var settings = CreateSettings();
         var id = 2;
         var tippecanoe = new Tippecanoe(17, 17);
-        var geometry = new Geometry("Point", new double[] { 9.840274737, 55.848383545 });
+        var coord = JsonDocument.Parse(JsonSerializer.Serialize(new double[] { 9.840274737, 55.848383545 }))
+            .RootElement;
+        var geometry = new Geometry("Point", coord);
+
         var properties = new Dictionary<string, object?>
         {
             { "mrid", "06e660e2-8a6b-4f1b-bc7f-85f1aea8ca5f" },

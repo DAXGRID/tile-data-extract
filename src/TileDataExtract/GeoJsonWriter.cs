@@ -11,12 +11,12 @@ internal static class GeoJsonWriter
     public static async Task WriteAsync(
         List<Selection> selections, string connectionString, string outputPath)
     {
+        var id = 0;
         foreach (var selection in selections)
         {
             var reader = PostgresReader.ReadTableColumnsAsync(
                 connectionString, selection.SqlQuery).ConfigureAwait(false);
 
-            var id = 0;
             await foreach (var column in reader)
             {
                 var jsonNewline = JsonNewline(GeoJsonFactory.Create(selection, column, id));

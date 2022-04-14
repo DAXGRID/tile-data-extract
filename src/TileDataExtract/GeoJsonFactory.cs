@@ -10,13 +10,21 @@ internal record Geometry
     [JsonPropertyName("type")]
     public string Type { get; init; }
     [JsonPropertyName("coordinates")]
-    public double[] Coordinates { get; init; }
+    public dynamic Coordinates { get; init; }
 
     [JsonConstructor]
-    public Geometry(string type, double[] coordinates)
+    public Geometry(string type, dynamic coordinates)
     {
+        if (type == "Point")
+            Coordinates = ((JsonElement)coordinates).Deserialize<double[]>()
+                ?? throw new ArgumentException($"Couldn't deserialize {coordinates}.", nameof(coordinates));
+        else if (type == "LineString")
+            Coordinates = ((JsonElement)coordinates).Deserialize<double[][]>()
+                ?? throw new ArgumentException($"Couldn't deserialize {coordinates}.", nameof(coordinates));
+        else
+            throw new ArgumentException($"Could not handle '{type}'.", nameof(type));
+
         Type = type;
-        Coordinates = coordinates;
     }
 }
 
