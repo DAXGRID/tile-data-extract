@@ -8,26 +8,27 @@ using Xunit;
 namespace TileDataExtract.Tests;
 
 [Trait("Category", "Integration")]
-public class PostgresReaderTests : IClassFixture<PostgisTestFixture>
+[Collection("Postgis collection")]
+public class PostgresReaderTests
 {
     [Theory]
     [JsonFileData("Data/route_node.json")]
     public async Task Read_table(string expected)
     {
         var sql =
-            @"select
-                mrid,
-                ST_AsGeoJSON(ST_Transform(coord,4326)) as coord,
-                routenode_kind,
-                routenode_function,
-                naming_name,
-                mapping_method,
-                lifecycle_deployment_state
+              @"select
+                  mrid,
+                  ST_AsGeoJSON(ST_Transform(coord,4326)) as coord,
+                  routenode_kind,
+                  routenode_function,
+                  naming_name,
+                  mapping_method,
+                  lifecycle_deployment_state
                 from
-                route_network.route_node
+                  route_network.route_node
                 where
-                coord is not null and
-                marked_to_be_deleted = false";
+                  coord is not null and
+                  marked_to_be_deleted = false";
 
         var columns = await PostgresReader.ReadTableColumnsAsync(
                          PostgisTestFixture.ConnectionString, sql).ToListAsync();

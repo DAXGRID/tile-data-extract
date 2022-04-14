@@ -11,6 +11,7 @@ public class GeoJsonFactoryTests
     public void Create()
     {
         var settings = CreateSettings();
+        var id = 2;
         var tippecanoe = new Tippecanoe(17, 17);
         var geometry = new Geometry("Point", new double[] { 9.840274737, 55.848383545 });
         var properties = new Dictionary<string, object?>
@@ -24,7 +25,7 @@ public class GeoJsonFactoryTests
             { "lifecycle_deployment_state", null }
         };
 
-        var expected = new GeoJsonStructure("Feature", 1, geometry, properties, tippecanoe);
+        var expected = new GeoJsonStructure("Feature", id, geometry, properties, tippecanoe);
         var selection = settings.Selections.First();
 
         var column = new Dictionary<string, object?>
@@ -38,7 +39,7 @@ public class GeoJsonFactoryTests
             { "lifecycle_deployment_state", null }
         };
 
-        var result = GeoJsonFactory.Create(selection, column);
+        var result = GeoJsonFactory.Create(selection, column, id);
 
         result.Should().BeEquivalentTo(expected);
     }
@@ -46,19 +47,19 @@ public class GeoJsonFactoryTests
     private static Settings CreateSettings()
     {
         var sql =
-            @"select
-                mrid,
-                ST_AsGeoJSON(ST_Transform(coord,4326)) as coord,
-                routenode_kind,
-                routenode_function,
-                naming_name,
-                mapping_method,
-                lifecycle_deployment_state
+              @"select
+                  mrid,
+                  ST_AsGeoJSON(ST_Transform(coord,4326)) as coord,
+                  routenode_kind,
+                  routenode_function,
+                  naming_name,
+                  mapping_method,
+                  lifecycle_deployment_state
                 from
-                route_network.route_node
+                  route_network.route_node
                 where
-                coord is not null and
-                marked_to_be_deleted = false";
+                  coord is not null and
+                  marked_to_be_deleted = false";
 
         var connString = "Host=localhost;Port=5432;Username=docker;Password=docker;Database=postgres";
 
@@ -78,7 +79,8 @@ public class GeoJsonFactoryTests
                         {"CentralOfficeSmall", new (5, 22)},
                         {"CabinetBig", new (12, 22)}
                     }),
-                new() {
+                new()
+                {
                     {"objecttype", "route_node"}
                 }
             )

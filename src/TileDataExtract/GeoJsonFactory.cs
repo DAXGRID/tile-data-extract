@@ -31,10 +31,11 @@ internal static class GeoJsonFactory
 {
     public static GeoJsonStructure Create(
         Selection selection,
-        Dictionary<string, object?> column) =>
+        Dictionary<string, object?> column,
+        int id) =>
         new GeoJsonStructure(
             selection.ObjectType,
-            1,
+            id,
             CreateGeometry(selection, column),
             CreateProperties(selection, column),
             CreateTippecanoe(selection, column));
@@ -49,10 +50,10 @@ internal static class GeoJsonFactory
         }
         else
         {
-            var customZoomFieldValue = (string?)column[selection.CustomZoom.FieldName];
+            var customZoomValue = (string?)column[selection.CustomZoom.FieldName];
             Zoom? zoom;
-            if (customZoomFieldValue is not null &&
-                selection.CustomZoom.ZoomMap.TryGetValue(customZoomFieldValue, out zoom))
+            if (customZoomValue is not null &&
+                selection.CustomZoom.ZoomMap.TryGetValue(customZoomValue, out zoom))
             {
                 tippecanoe = new(zoom.MinZoom, zoom.MaxZoom);
             }

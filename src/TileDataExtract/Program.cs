@@ -18,7 +18,7 @@ internal static class Program
         var startup = serviceProvider.GetService<Startup>();
 
         if (startup is not null)
-            await startup.Start().ConfigureAwait(false);
+            await startup.StartAsync().ConfigureAwait(false);
         else
             throw new ArgumentNullException(nameof(startup));
     }
