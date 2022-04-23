@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace TileDataExtract;
 
-internal record Tippecanoe(int Minzoom, int Maxzoom);
+internal sealed record Tippecanoe(int Minzoom, int Maxzoom);
 
-internal record Geometry
+internal sealed record Geometry
 {
     [JsonPropertyName("type")]
     public string Type { get; init; }
@@ -28,7 +28,7 @@ internal record Geometry
     }
 }
 
-internal record GeoJsonStructure(
+internal sealed record GeoJsonStructure(
     string Type,
     int Id,
     Geometry Geometry,

@@ -2,7 +2,7 @@ using Npgsql;
 
 namespace TileDataExtract;
 
-internal class PostgresReader
+internal sealed class PostgresReader
 {
     public static async IAsyncEnumerable<Dictionary<string, object?>>
         ReadTableColumnsAsync(string connectionString, string query)

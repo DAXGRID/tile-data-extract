@@ -14,7 +14,7 @@ public class PostgresReaderTests
 {
     [Theory]
     [JsonFileData("Data/route_node.json")]
-    public async Task Read_table(string expectedJson)
+    public async ValueTask Read_table(string expectedJson)
     {
         var expected = JToken.Parse(expectedJson);
 

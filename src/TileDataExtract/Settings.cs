@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace TileDataExtract;
 
-internal record Zoom
+internal sealed record Zoom
 {
     [JsonPropertyName("minZoom")]
     public int MinZoom { get; init; }
@@ -17,7 +17,7 @@ internal record Zoom
     }
 }
 
-internal record CustomZoom
+internal sealed record CustomZoom
 {
     [JsonPropertyName("fieldName")]
     public string FieldName { get; init; }
@@ -32,7 +32,7 @@ internal record CustomZoom
     }
 }
 
-internal record Selection
+internal sealed record Selection
 {
     [JsonPropertyName("objectType")]
     public string ObjectType { get; init; }
@@ -65,7 +65,7 @@ internal record Selection
     }
 }
 
-internal record Settings
+internal sealed record Settings
 {
     [JsonPropertyName("outputFilePath")]
     public string OutputFilePath { get; init; }
