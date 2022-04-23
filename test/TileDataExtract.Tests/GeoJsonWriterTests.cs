@@ -14,7 +14,7 @@ public class GeoJsonWriterTests
 {
     [Theory]
     [JsonFileData("Data/route_network.geojson")]
-    public async Task Read_from_postgres_and_write_geojson_to_disk(string expected)
+    public async ValueTask Read_from_postgres_and_write_geojson_to_disk(string expected)
     {
         var settings = CreateSettings();
 

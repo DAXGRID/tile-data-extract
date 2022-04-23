@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace TileDataExtract;
 
-internal class Startup
+internal sealed class Startup
 {
     private readonly ILogger<Startup> _logger;
     private readonly Settings _settings;
@@ -13,7 +13,7 @@ internal class Startup
         _settings = settings;
     }
 
-    public async Task StartAsync()
+    public async ValueTask StartAsync()
     {
         _logger.LogInformation($"Starting {nameof(TileDataExtract)}.");
 

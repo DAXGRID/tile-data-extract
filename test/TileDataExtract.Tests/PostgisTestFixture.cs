@@ -21,7 +21,7 @@ public class PostgisTestFixture : IAsyncLifetime
         await Task.CompletedTask;
     }
 
-    private async Task SetupDB()
+    private async ValueTask SetupDB()
     {
         using var conn = new NpgsqlConnection(ConnectionString);
         var sql = File.ReadAllText(GetFilePath("Scripts/setup_db.sql"));
@@ -30,7 +30,7 @@ public class PostgisTestFixture : IAsyncLifetime
         await cmd.ExecuteNonQueryAsync();
     }
 
-    private async Task CleanupDB()
+    private async ValueTask CleanupDB()
     {
         var sql = "DROP SCHEMA IF EXISTS route_network CASCADE";
         using var conn = new NpgsqlConnection(ConnectionString);

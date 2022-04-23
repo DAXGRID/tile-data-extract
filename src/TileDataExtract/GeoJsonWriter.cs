@@ -1,4 +1,3 @@
-using System.Text;
 using System.Text.Json;
 
 namespace TileDataExtract;
@@ -8,7 +7,7 @@ internal static class GeoJsonWriter
     private readonly static JsonSerializerOptions _jsonSerializerOptions =
         new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
-    public static async Task WriteAsync(
+    public static async ValueTask WriteAsync(
         List<Selection> selections, string connectionString, string outputPath)
     {
         var id = 0;
