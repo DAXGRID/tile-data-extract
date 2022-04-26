@@ -11,19 +11,20 @@ internal static class GeoJsonWriter
         List<Selection> selections, string connectionString, string outputPath)
     {
         var id = 0;
-        using StreamWriter writer = new(outputPath);
+        using var file = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
+        using var writer = new BufferedStream(file);
         foreach (var selection in selections)
         {
             var reader = PostgresReader.ReadTableColumnsAsync(connectionString, selection.SqlQuery)
                 .ConfigureAwait(false);
-
             await foreach (var column in reader)
             {
                 var geojson = JsonSerializer.Serialize(
                     GeoJsonFactory.Create(selection, column, id), _jsonSerializerOptions);
-                await writer.WriteLineAsync(geojson).ConfigureAwait(false);
+                await writer.WriteAsync(System.Text.Encoding.UTF8.GetBytes(geojson));
                 id++;
             }
         }
+        await writer.FlushAsync().ConfigureAwait(false);
     }
 }
