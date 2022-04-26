@@ -19,9 +19,8 @@ internal static class GeoJsonWriter
                 .ConfigureAwait(false);
             await foreach (var column in reader)
             {
-                var geojson = JsonSerializer.Serialize(
-                    GeoJsonFactory.Create(selection, column, id), _jsonSerializerOptions);
-                await writer.WriteAsync(System.Text.Encoding.UTF8.GetBytes(geojson));
+                var geojsonLine = JsonSerializer.Serialize(GeoJsonFactory.Create(selection, column, id), _jsonSerializerOptions) + "\n";
+                await writer.WriteAsync(System.Text.Encoding.UTF8.GetBytes(geojsonLine));
                 id++;
             }
         }
