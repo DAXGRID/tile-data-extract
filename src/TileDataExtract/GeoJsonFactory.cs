@@ -1,32 +1,10 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
+using Newtonsoft.Json;
 
 namespace TileDataExtract;
 
 internal sealed record Tippecanoe(int Minzoom, int Maxzoom);
-
-internal sealed record Geometry
-{
-    [JsonPropertyName("type")]
-    public string Type { get; init; }
-    [JsonPropertyName("coordinates")]
-    public dynamic Coordinates { get; init; }
-
-    [JsonConstructor]
-    public Geometry(string type, dynamic coordinates)
-    {
-        if (type == "Point")
-            Coordinates = ((JsonElement)coordinates).Deserialize<double[]>()
-                ?? throw new ArgumentException($"Couldn't deserialize {coordinates}.", nameof(coordinates));
-        else if (type == "LineString")
-            Coordinates = ((JsonElement)coordinates).Deserialize<double[][]>()
-                ?? throw new ArgumentException($"Couldn't deserialize {coordinates}.", nameof(coordinates));
-        else
-            throw new ArgumentException($"Could not handle '{type}'.", nameof(type));
-
-        Type = type;
-    }
-}
 
 internal sealed record GeoJsonStructure(
     string Type,
@@ -78,16 +56,21 @@ internal static class GeoJsonFactory
         Selection selection, Dictionary<string, object?> column)
     {
         return column.Where(x => x.Key != selection.GeometryFieldName)
-            .Concat(selection.ExtraProperties as Dictionary<string, object?>)
+            .Concat(selection.ExtraProperties.ToDictionary(x => x.Key, y => (object?)y.Value))
             .ToDictionary(x => x.Key, x => x.Value);
     }
 
     private static Geometry CreateGeometry(
         Selection selection, Dictionary<string, object?> column)
     {
-        var geometry = (string?)column[selection.GeometryFieldName] ?? "";
-        return JsonSerializer.Deserialize<Geometry>(geometry) ??
-           throw new ArgumentException(
-               $"Could not deserialize geometry with value: {geometry}.", nameof(geometry));
+        var geoJsonGeometry = (string?)column[selection.GeometryFieldName] ?? "";
+
+        var serializer = GeoJsonSerializer.Create();
+        using (var stringReader = new StringReader(geoJsonGeometry))
+        using (var jsonReader = new JsonTextReader(stringReader))
+        {
+            return serializer.Deserialize<NetTopologySuite.Geometries.Geometry>(jsonReader)
+                ?? throw new ArgumentException($"Could not handle geometry '{geoJsonGeometry}'");
+        }
     }
 }

@@ -1,7 +1,11 @@
 using FluentAssertions;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text.Json;
 using Xunit;
 
 namespace TileDataExtract.Tests;
@@ -14,9 +18,15 @@ public class GeoJsonFactoryTests
         var settings = CreateSettings();
         var id = 2;
         var tippecanoe = new Tippecanoe(17, 17);
-        var coord = JsonDocument.Parse(JsonSerializer.Serialize(new double[] { 9.840274737, 55.848383545 }))
-            .RootElement;
-        var geometry = new Geometry("Point", coord);
+
+        Geometry geometry;
+        var serializer = GeoJsonSerializer.Create();
+        using (var stringReader = new StringReader("{\"type\":\"Point\",\"coordinates\":[9.840274737,55.848383545]}"))
+        using (var jsonReader = new JsonTextReader(stringReader))
+        {
+            geometry = serializer.Deserialize<NetTopologySuite.Geometries.Geometry>(jsonReader)
+                ?? throw new ArgumentException($"Could not handle geometry");
+        }
 
         var properties = new Dictionary<string, object?>
         {
