@@ -45,7 +45,7 @@ internal sealed record Selection
     [JsonPropertyName("customZoom")]
     public CustomZoom? CustomZoom { get; init; }
     [JsonPropertyName("extraProperties")]
-    public Dictionary<string, object> ExtraProperties { get; init; }
+    public Dictionary<string, string> ExtraProperties { get; init; }
 
     [JsonConstructor]
     public Selection(
@@ -54,7 +54,7 @@ internal sealed record Selection
         string sqlQuery,
         Zoom defaultZoom,
         CustomZoom? customZoom,
-        Dictionary<string, object>? extraProperties)
+        Dictionary<string, string>? extraProperties)
     {
         ObjectType = objectType;
         GeometryFieldName = geometryFieldName;
