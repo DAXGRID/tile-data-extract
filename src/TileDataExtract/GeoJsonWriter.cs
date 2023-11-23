@@ -15,11 +15,12 @@ internal static class GeoJsonWriter
             Converters = { new GeometryConverter() }
         };
 
-        var id = 0;
         using var writer = new StreamWriter(outputPath);
         foreach (var selection in selections)
         {
+            var id = 0;
             var reader = PostgresReader.ReadTableColumnsAsync(connectionString, selection.SqlQuery).ConfigureAwait(false);
+
             await foreach (var column in reader)
             {
                 var serializer = GeoJsonSerializer.Create(serializerSettings);
@@ -29,8 +30,9 @@ internal static class GeoJsonWriter
                     serializer.Serialize(jsonWriter, GeoJsonFactory.Create(selection, column, id));
                     await writer.WriteLineAsync(stringWriter.ToString()).ConfigureAwait(false);
                 }
+
+                id++;
             }
-            id++;
         }
     }
 }
