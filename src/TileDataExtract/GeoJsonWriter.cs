@@ -15,10 +15,10 @@ internal static class GeoJsonWriter
             Converters = { new GeometryConverter() }
         };
 
+        var id = 0;
         using var writer = new StreamWriter(outputPath);
         foreach (var selection in selections)
         {
-            var id = 0;
             var reader = PostgresReader.ReadTableColumnsAsync(connectionString, selection.SqlQuery).ConfigureAwait(false);
 
             await foreach (var column in reader)
