@@ -30,6 +30,7 @@ internal static class GeoJsonWriter
                     await writer.WriteLineAsync(stringWriter.ToString()).ConfigureAwait(false);
                 }
             }
+            id++;
         }
     }
 }
