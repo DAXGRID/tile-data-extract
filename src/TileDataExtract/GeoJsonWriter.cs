@@ -11,7 +11,8 @@ internal static class GeoJsonWriter
         List<Selection> selections,
         string connectionString,
         string outputPath,
-        Action<string> processingInfoCallback)
+        Action<string> processingInfoCallback,
+        Action<string> processingErrorCallback)
     {
         var serializerSettings = new JsonSerializerSettings
         {
@@ -21,6 +22,7 @@ internal static class GeoJsonWriter
 
         var id = 0;
         using var writer = new StreamWriter(outputPath);
+        var serializer = GeoJsonSerializer.Create(serializerSettings);
         foreach (var selection in selections)
         {
             processingInfoCallback($"Starting processing selection with SQL: {selection.SqlQuery}.");
@@ -29,12 +31,20 @@ internal static class GeoJsonWriter
 
             await foreach (var column in reader)
             {
-                var serializer = GeoJsonSerializer.Create(serializerSettings);
                 using (var stringWriter = new StringWriter())
                 using (var jsonWriter = new JsonTextWriter(stringWriter))
                 {
-                    serializer.Serialize(jsonWriter, GeoJsonFactory.Create(selection, column, id));
-                    await writer.WriteLineAsync(stringWriter.ToString()).ConfigureAwait(false);
+                    try
+                    {
+                        serializer.Serialize(jsonWriter, GeoJsonFactory.Create(selection, column, id));
+                        await writer.WriteLineAsync(stringWriter.ToString()).ConfigureAwait(false);
+                    }
+                    catch (Exception)
+                    {
+                        var failedColumn = $"Failed at {String.Join(", ", column.Select(x => $"{x.Key} : {x.Value?.ToString() ?? "NULL"}"))}.";
+                        processingInfoCallback($"Failed at: {failedColumn}");
+                        throw;
+                    }
                 }
 
                 id++;

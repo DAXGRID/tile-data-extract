@@ -21,7 +21,8 @@ internal sealed class Startup
             _settings.Selections,
             _settings.ConnectionString,
             _settings.OutputFilePath,
-            (x) => _logger.LogInformation(x)
+            (x) => _logger.LogInformation(x),
+            (x) => _logger.LogError(x)
         ).ConfigureAwait(false);
 
         _logger.LogInformation($"Finished writing to {_settings.OutputFilePath}");
