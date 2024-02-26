@@ -22,6 +22,7 @@ public class GeoJsonWriterTests
             settings.Selections,
             settings.ConnectionString,
             settings.OutputFilePath,
+            (x) => Console.WriteLine(x),
             (x) => Console.WriteLine(x)
         );
 
