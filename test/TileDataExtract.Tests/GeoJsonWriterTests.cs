@@ -19,7 +19,11 @@ public class GeoJsonWriterTests
         var settings = CreateSettings();
 
         await GeoJsonWriter.WriteAsync(
-            settings.Selections, settings.ConnectionString, settings.OutputFilePath);
+            settings.Selections,
+            settings.ConnectionString,
+            settings.OutputFilePath,
+            (x) => Console.WriteLine(x)
+        );
 
         var result = await File.ReadAllTextAsync(settings.OutputFilePath);
 
