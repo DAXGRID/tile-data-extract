@@ -20,7 +20,9 @@ internal sealed class Startup
         await GeoJsonWriter.WriteAsync(
             _settings.Selections,
             _settings.ConnectionString,
-            _settings.OutputFilePath).ConfigureAwait(false);
+            _settings.OutputFilePath,
+            (x) => _logger.LogInformation(x)
+        ).ConfigureAwait(false);
 
         _logger.LogInformation($"Finished writing to {_settings.OutputFilePath}");
     }
