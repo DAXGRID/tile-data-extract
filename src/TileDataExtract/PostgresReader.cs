@@ -10,7 +10,13 @@ internal sealed class PostgresReader
         using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync().ConfigureAwait(false);
 
-        using var cmd = new NpgsqlCommand(query, conn);
+        using var cmd = new NpgsqlCommand(query, conn)
+        {
+            // Gives the request two minutes to complete.
+            // The result set can be rather large, so sometimes the default 30 seconds is not enough.
+            CommandTimeout = 120
+        };
+
         var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
 
         while (await reader.ReadAsync().ConfigureAwait(false))
