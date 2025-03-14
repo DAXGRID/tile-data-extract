@@ -20,8 +20,7 @@ internal sealed class Startup
         const int maxRetries = 5;
         const int retryDelay = 1000;
         var retries = 0;
-
-        bool completed = true;
+        var completed = false;
 
         while (!completed)
         {
