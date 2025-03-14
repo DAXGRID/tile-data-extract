@@ -39,6 +39,8 @@ internal sealed class Startup
             }
             catch (TimeoutException ex)
             {
+                retries++;
+
                 if (retries == maxRetries)
                 {
                     throw new MaxRetriesReachedException(
@@ -46,8 +48,8 @@ internal sealed class Startup
                         ex);
                 }
 
-                retries++;
-                _logger.LogInformation("{Exeption}", ex);
+                _logger.LogInformation("Received the following {Exeption}, retrying, {CurrentRetries} {MaxNumberOfRetries}.", ex, retries, maxRetries);
+
                 await Task.Delay(retryDelay).ConfigureAwait(false);
             }
         }
