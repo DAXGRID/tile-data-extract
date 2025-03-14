@@ -17,7 +17,7 @@ internal sealed class PostgresReader
             CommandTimeout = 300
         };
 
-        var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
+        using var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
 
         while (await reader.ReadAsync().ConfigureAwait(false))
         {
