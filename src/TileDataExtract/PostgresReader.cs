@@ -14,7 +14,7 @@ internal sealed class PostgresReader
         {
             // Gives the request two minutes to complete.
             // The result set can be rather large, so sometimes the default 30 seconds is not enough.
-            CommandTimeout = 120
+            CommandTimeout = 300
         };
 
         var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
