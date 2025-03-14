@@ -13,17 +13,44 @@ internal sealed class Startup
         _settings = settings;
     }
 
-    public async ValueTask StartAsync()
+    public async Task StartAsync()
     {
         _logger.LogInformation($"Starting {nameof(TileDataExtract)}.");
 
-        await GeoJsonWriter.WriteAsync(
-            _settings.Selections,
-            _settings.ConnectionString,
-            _settings.OutputFilePath,
-            (x) => _logger.LogInformation(x),
-            (x) => _logger.LogError(x)
-        ).ConfigureAwait(false);
+        const int maxRetries = 5;
+        const int retryDelay = 1000;
+        var retries = 0;
+
+        bool completed = true;
+
+        while (!completed)
+        {
+            try
+            {
+                await GeoJsonWriter.WriteAsync(
+                    _settings.Selections,
+                    _settings.ConnectionString,
+                    _settings.OutputFilePath,
+                    (x) => _logger.LogInformation(x),
+                    (x) => _logger.LogError(x)
+                ).ConfigureAwait(false);
+
+                completed = true;
+            }
+            catch (TimeoutException ex)
+            {
+                if (retries == maxRetries)
+                {
+                    throw new MaxRetriesReachedException(
+                        "Max number of retries '{maxRetries}' reached.",
+                        ex);
+                }
+
+                retries++;
+                _logger.LogInformation("{Exeption}", ex);
+                await Task.Delay(retryDelay).ConfigureAwait(false);
+            }
+        }
 
         _logger.LogInformation($"Finished writing to {_settings.OutputFilePath}");
     }

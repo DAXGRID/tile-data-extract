@@ -21,7 +21,10 @@ internal static class GeoJsonWriter
         };
 
         var id = 0;
-        using var writer = new StreamWriter(outputPath);
+
+        using var fs = new FileStream(outputPath, FileMode.Create);
+        using var writer = new StreamWriter(fs);
+
         var serializer = GeoJsonSerializer.Create(serializerSettings);
         foreach (var selection in selections)
         {
