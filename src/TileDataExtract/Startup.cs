@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace TileDataExtract;
 
@@ -36,20 +37,28 @@ internal sealed class Startup
 
                 completed = true;
             }
-            catch (TimeoutException ex)
+            catch (NpgsqlException ex)
             {
-                retries++;
-
-                if (retries == maxRetries)
+                if (ex.InnerException is TimeoutException)
                 {
-                    throw new MaxRetriesReachedException(
-                        "Max number of retries '{maxRetries}' reached.",
-                        ex);
+                    retries++;
+
+                    if (retries == maxRetries)
+                    {
+                        throw new MaxRetriesReachedException(
+                            "Max number of retries '{maxRetries}' reached.",
+                            ex);
+                    }
+
+                    _logger.LogInformation("Received the following {Exeption}, retrying, {CurrentRetries} {MaxNumberOfRetries}.", ex, retries, maxRetries);
+
+                    await Task.Delay(retryDelay).ConfigureAwait(false);
                 }
-
-                _logger.LogInformation("Received the following {Exeption}, retrying, {CurrentRetries} {MaxNumberOfRetries}.", ex, retries, maxRetries);
-
-                await Task.Delay(retryDelay).ConfigureAwait(false);
+                else
+                {
+                    _logger.LogCritical("{Exception}.", ex);
+                    throw;
+                }
             }
         }
 
