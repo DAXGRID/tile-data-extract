@@ -23,7 +23,7 @@ executors:
     environment:
       IMAGE_NAME: openftth/tile-data-extract
     docker:
-      - image: cimg/base:2020.09
+      - image: cimg/base:2026.04
         auth:
           username: $DOCKER_LOGIN
           password: $DOCKER_ACCESSTOKEN
