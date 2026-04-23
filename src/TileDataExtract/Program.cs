@@ -8,9 +8,9 @@ namespace TileDataExtract;
 
 internal static class Program
 {
-    internal static async Task Main()
+    internal static async Task Main(string[] args)
     {
-        using var serviceProvider = BuildServiceProvider();
+        using var serviceProvider = BuildServiceProvider(args.Length > 0 ? args[0] : "appsettings.json");
         var startup = serviceProvider.GetService<Startup>();
 
         if (startup is not null)
@@ -19,7 +19,7 @@ internal static class Program
             throw new ArgumentNullException(nameof(startup));
     }
 
-    private static ServiceProvider BuildServiceProvider()
+    private static ServiceProvider BuildServiceProvider(string appsettingsPath)
     {
         var logger = new LoggerConfiguration()
             .MinimumLevel.Information()
@@ -29,7 +29,7 @@ internal static class Program
             .WriteTo.Console(new CompactJsonFormatter())
             .CreateLogger();
 
-        var settingsJson = JsonDocument.Parse(File.ReadAllText("appsettings.json"))
+        var settingsJson = JsonDocument.Parse(File.ReadAllText(appsettingsPath))
             .RootElement.GetProperty("settings").ToString();
 
         var settings = JsonSerializer.Deserialize<Settings>(settingsJson) ??
