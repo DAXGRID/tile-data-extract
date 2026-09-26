@@ -21,7 +21,7 @@ executors:
         name: "postgis"
   docker-publisher:
     environment:
-      IMAGE_NAME: openftth/tile-data-extract
+      IMAGE_NAME: daxgrid/tile-data-extract
     docker:
       - image: cimg/base:2026.04
         auth:
