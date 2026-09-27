@@ -23,7 +23,7 @@ executors:
     environment:
       IMAGE_NAME: daxgrid/tile-data-extract
     docker:
-      - image: cimg/base:2026.04
+      - image: cimg/base:current
         auth:
           username: $DOCKER_LOGIN
           password: $DOCKER_ACCESSTOKEN
