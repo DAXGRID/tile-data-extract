@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build-env
 WORKDIR /app
 
 COPY ./*sln ./
@@ -14,10 +14,10 @@ WORKDIR /app/src/TileDataExtract
 RUN dotnet publish -c Release -o out --packages ./packages
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/runtime:10.0
+FROM mcr.microsoft.com/dotnet/runtime:10.0-alpine
 WORKDIR /app
 
-RUN apt-get update && apt-get install curl -y
+RUN apk add --no-cache curl
 
 COPY --from=build-env /app/src/TileDataExtract/out .
 ENTRYPOINT ["dotnet", "TileDataExtract.dll"]
