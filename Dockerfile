@@ -17,7 +17,7 @@ RUN dotnet publish -c Release -o out --packages ./packages
 FROM mcr.microsoft.com/dotnet/runtime:10.0-alpine
 WORKDIR /app
 
-RUN apk add --no-cache curl
+RUN apk add --no-cache curl krb5-libs
 
 COPY --from=build-env /app/src/TileDataExtract/out .
 ENTRYPOINT ["dotnet", "TileDataExtract.dll"]
