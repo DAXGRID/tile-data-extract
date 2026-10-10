@@ -19,5 +19,6 @@ WORKDIR /app
 
 RUN apk add --no-cache curl icu-libs krb5-libs
 
-COPY --from=build-env /app/src/TileDataExtract/out .
+COPY --from=build-env --chown=app:app /app/src/TileDataExtract/out .
+USER app
 ENTRYPOINT ["dotnet", "TileDataExtract.dll"]
